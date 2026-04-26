@@ -7,10 +7,10 @@ Web UI and API wrapper for the Python Mappie map generator.
 - `api/` - FastAPI backend that runs Mappie generation jobs and serves artifacts.
 - `web/` - Nuxt 3 frontend for map settings, job status, previews, and downloads.
 
-The backend expects the existing Python project to be available at:
+The backend expects the existing Python project to be available at your local Mappie checkout:
 
 ```bash
-/Users/juliuswong/Dev/Aseprite-Mappie
+/path/to/Aseprite-Mappie
 ```
 
 Override this with `MAPPIE_CORE_PATH` if needed.
@@ -21,7 +21,7 @@ Override this with `MAPPIE_CORE_PATH` if needed.
 cd api
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e /Users/juliuswong/Dev/Aseprite-Mappie
+pip install -e /path/to/Aseprite-Mappie
 pip install -e .
 uvicorn mappie_web.main:app --reload --port 8000
 ```
