@@ -264,9 +264,12 @@ function formatBytes(size: number) {
             <p class="eyebrow">Generator</p>
             <h2>Map Settings</h2>
           </div>
-          <button class="primary" type="submit" :disabled="!canSubmit">
-            {{ loading ? 'Starting...' : 'Generate Map' }}
-          </button>
+          <div class="panel-actions">
+            <NuxtLink class="ghost-button" to="/editor">Open Map Editor</NuxtLink>
+            <button class="primary" type="submit" :disabled="!canSubmit">
+              {{ loading ? 'Starting...' : 'Generate Map' }}
+            </button>
+          </div>
         </div>
 
         <div class="preset-row">
