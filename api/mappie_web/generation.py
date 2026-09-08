@@ -23,8 +23,12 @@ def run_generation_job(request: MapRequest, output_dir: Path) -> None:
 
     log = io.StringIO()
     with contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
+        profile_arg = resolve_profile_arg(request.profile)
+        # When a profile is set, canvas/densities from the request act as overrides
+        # (None would mean "use profile"; we still pass request values as explicit overrides).
         map_gen_cli.run_from_args(
             argparse.Namespace(
+                profile=profile_arg or "",
                 width=request.width,
                 height=request.height,
                 tree_density=request.tree_density,
@@ -114,6 +118,28 @@ def run_generation_job(request: MapRequest, output_dir: Path) -> None:
 
     (output_dir / "job.log").write_text(log.getvalue(), encoding="utf-8")
     copy_sidecar_outputs(output_dir, ascii_path)
+
+
+
+def resolve_profile_arg(raw: str | None) -> str | None:
+    """Resolve optional profile path/id to an absolute path under the Mappie core repo."""
+    if not raw:
+        return None
+    text = raw.strip()
+    if not text:
+        return None
+    candidate = Path(text).expanduser()
+    if candidate.is_file():
+        return str(candidate.resolve())
+    core = core_path()
+    # id like moba_3lane_lunacia → profiles/<id>.json
+    for rel in (text, f"profiles/{text}", f"profiles/{text}.json", f"{text}.json"):
+        p = (core / rel).resolve()
+        if p.is_file():
+            return str(p)
+    # Allow relative to core even if missing — map_gen will error clearly
+    return str((core / text).resolve())
+
 
 
 def resolve_core_relative_path(raw: str) -> Path:

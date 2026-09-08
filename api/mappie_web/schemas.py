@@ -50,6 +50,10 @@ class MapRequest(BaseModel):
     seed: int = Field(default=42, ge=0, le=999_999_999)
     terrain_config: str = "examples/terrain.bitmask.json"
     include_aseprite: bool = True
+    profile: str | None = Field(
+        default=None,
+        description="Optional Mappie criteria profile path or id (e.g. profiles/moba_3lane_lunacia.json). Densities remain overrides on top of the profile.",
+    )
     asset_overrides: AssetOverrides = Field(default_factory=AssetOverrides)
 
 
